@@ -3,6 +3,7 @@ import { HOSPITAL } from "@/lib/constants"
 import { getTituloUsuario } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import { Separator } from "@/components/ui/separator"
+import { ThemeToggle } from "@/components/theme/ThemeToggle"
 import type { Profile } from "@/types/database"
 
 export function AppHeader({ profile }: { profile: Profile }) {
@@ -12,7 +13,7 @@ export function AppHeader({ profile }: { profile: Profile }) {
     : profile.nombre_completo
 
   return (
-    <header className="sticky top-0 z-40 border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/80">
+    <header className="glass sticky top-0 z-40 shadow-sm">
       <div className="mx-auto flex h-16 w-full max-w-6xl items-center gap-4 px-4 sm:px-6">
         <div className="flex flex-col">
           <span className="text-sm font-semibold leading-tight">
@@ -23,10 +24,16 @@ export function AppHeader({ profile }: { profile: Profile }) {
           </span>
         </div>
         <Separator orientation="vertical" className="hidden h-8 sm:block" />
-        <div className="ml-auto flex items-center gap-3">
+        <div className="ml-auto flex items-center gap-2">
+          <ThemeToggle />
           <span className="hidden text-sm sm:inline">{saludo}</span>
           <form action={logoutAction}>
-            <Button type="submit" variant="outline" size="sm">
+            <Button
+              type="submit"
+              variant="outline"
+              size="sm"
+              className="button-ios"
+            >
               Cerrar sesión
             </Button>
           </form>
