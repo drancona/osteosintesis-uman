@@ -83,7 +83,7 @@ export function LoginForm() {
             </FormItem>
           )}
         />
-        <Button type="submit" className="w-full" disabled={cargando}>
+        <Button type="submit" className="button-ios w-full" disabled={cargando}>
           {cargando ? (
             <>
               <Loader2 className="size-4 animate-spin" />

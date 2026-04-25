@@ -1,3 +1,4 @@
+import Image from "next/image"
 import { redirect } from "next/navigation"
 
 import { createClient } from "@/lib/supabase/server"
@@ -22,12 +23,26 @@ export default async function RegisterPage() {
   }
 
   return (
-    <Card>
-      <CardHeader className="text-center">
-        <CardTitle className="text-2xl">Crear cuenta</CardTitle>
-        <CardDescription>{HOSPITAL.nombre}</CardDescription>
+    <Card className="glass-strong rounded-2xl border-0 shadow-xl">
+      <CardHeader className="items-center text-center space-y-3">
+        <Image
+          src="/logo_imss.png"
+          alt="IMSS"
+          width={56}
+          height={56}
+          priority
+          className="rounded-md"
+        />
+        <div className="space-y-1">
+          <CardTitle className="text-2xl font-semibold tracking-tight">
+            Crear cuenta
+          </CardTitle>
+          <CardDescription>
+            {HOSPITAL.nombre} · {HOSPITAL.servicio}
+          </CardDescription>
+        </div>
       </CardHeader>
-      <CardContent>
+      <CardContent className="space-y-5">
         <RegisterForm />
       </CardContent>
     </Card>
