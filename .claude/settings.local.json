@@ -1,0 +1,40 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(gh --version)",
+      "Bash(supabase --version)",
+      "Bash(scoop --version)",
+      "Bash(winget --version)",
+      "Bash(npm --version)",
+      "Bash(winget search *)",
+      "PowerShell(scoop bucket *)",
+      "PowerShell(& \"$env:USERPROFILE\\\\scoop\\\\shims\\\\scoop.cmd\" bucket add supabase https://github.com/supabase/scoop-bucket.git)",
+      "Bash(gh auth *)",
+      "Bash(rm -rf /tmp/osteo-staging)",
+      "Bash(mkdir -p /tmp/osteo-staging)",
+      "Bash(mv docs *)",
+      "Read(//c/c/Users/Ancona/desktop/**)",
+      "Bash(npm install *)",
+      "Bash(npx --yes shadcn@latest init --base-color slate --yes --force)",
+      "Bash(npx --yes shadcn@latest init --help)",
+      "Bash(npx --yes shadcn@latest init -d --force)",
+      "Bash(npx --yes shadcn@latest init --force --reinstall -b radix -y)",
+      "Bash(npx --yes shadcn@latest init --force --reinstall -b radix -p base-nova -y)",
+      "Bash(npx --yes shadcn@latest init --force --reinstall -b radix -p nova -y)",
+      "Bash(yes)",
+      "Bash(npx --yes shadcn@latest add input label form dialog select textarea card table popover command badge separator alert sonner --overwrite)",
+      "Bash(npx --yes shadcn@latest add form)",
+      "Bash(npx --yes shadcn@latest add form --overwrite)",
+      "Bash(npx --yes shadcn@latest view form)",
+      "Bash(mkdir -p 'src/app/\\(auth\\)/login' 'src/app/\\(auth\\)/register' 'src/app/\\(app\\)/cirugias/nueva' 'src/app/\\(app\\)/cirugias/[id]' 'src/app/\\(app\\)/calendario' 'src/app/\\(app\\)/admin/usuarios' 'src/app/\\(app\\)/admin/catalogo' src/app/api/health 'src/app/api/pdf/[tipo]/[id]' src/components/forms src/components/pdf/templates src/components/pdf/components src/lib/supabase src/lib/schemas src/hooks src/types)",
+      "Bash(touch 'src/app/\\(auth\\)/login/.gitkeep' 'src/app/\\(auth\\)/register/.gitkeep' 'src/app/\\(app\\)/cirugias/nueva/.gitkeep' 'src/app/\\(app\\)/cirugias/[id]/.gitkeep' 'src/app/\\(app\\)/calendario/.gitkeep' 'src/app/\\(app\\)/admin/usuarios/.gitkeep' 'src/app/\\(app\\)/admin/catalogo/.gitkeep' 'src/app/api/pdf/[tipo]/[id]/.gitkeep' src/components/forms/.gitkeep src/components/pdf/templates/.gitkeep src/components/pdf/components/.gitkeep src/lib/schemas/.gitkeep src/hooks/.gitkeep)",
+      "Bash(npx --yes supabase status)",
+      "Bash(npm run *)",
+      "Bash(taskkill //F //PID 44488)",
+      "Bash(netstat -ano)",
+      "Bash(pkill -f \"next dev\")",
+      "Bash(pkill -f \"next-server\")",
+      "Bash(taskkill //F //PID 7332)"
+    ]
+  }
+}
