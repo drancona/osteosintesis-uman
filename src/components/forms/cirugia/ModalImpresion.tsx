@@ -19,11 +19,20 @@ interface Props {
   onClose: () => void
 }
 
-const PROXIMAMENTE = "Generación de PDF disponible en próxima versión"
+const TIPOS = [
+  { tipo: "hoja-qx", label: "Hoja de cirugías", icono: FileText },
+  { tipo: "consentimiento", label: "Consentimiento Informado", icono: ClipboardSignature },
+  { tipo: "solicitud-material", label: "Solicitud de Material de Osteosíntesis", icono: Package },
+  { tipo: "internamiento", label: "Solicitud de Internamiento", icono: BedDouble },
+] as const
 
-export function ModalImpresion({ open, onClose }: Props) {
-  function aviso() {
-    toast.info(PROXIMAMENTE)
+export function ModalImpresion({ open, cirugiaId, onClose }: Props) {
+  function abrirPDF(tipo: string) {
+    if (!cirugiaId) {
+      toast.error("Falta el identificador de la cirugía")
+      return
+    }
+    window.open(`/api/pdf/${tipo}/${cirugiaId}`, "_blank", "noopener,noreferrer")
   }
 
   return (
@@ -32,55 +41,24 @@ export function ModalImpresion({ open, onClose }: Props) {
         <DialogHeader>
           <DialogTitle>Cirugía programada exitosamente</DialogTitle>
           <DialogDescription>
-            Selecciona un formato para imprimir o cerrar esta ventana.
+            Selecciona un formato para abrirlo en una pestaña nueva o cierra esta ventana.
           </DialogDescription>
         </DialogHeader>
 
         <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
-          <Button
-            type="button"
-            variant="outline"
-            className="h-20 justify-start gap-3"
-            onClick={aviso}
-          >
-            <FileText className="size-5" />
-            <span className="text-left text-sm font-medium">
-              Hoja de cirugías
-            </span>
-          </Button>
-          <Button
-            type="button"
-            variant="outline"
-            className="h-20 justify-start gap-3"
-            onClick={aviso}
-          >
-            <ClipboardSignature className="size-5" />
-            <span className="text-left text-sm font-medium">
-              Consentimiento Informado
-            </span>
-          </Button>
-          <Button
-            type="button"
-            variant="outline"
-            className="h-20 justify-start gap-3"
-            onClick={aviso}
-          >
-            <Package className="size-5" />
-            <span className="text-left text-sm font-medium">
-              Solicitud de Material de Osteosíntesis
-            </span>
-          </Button>
-          <Button
-            type="button"
-            variant="outline"
-            className="h-20 justify-start gap-3"
-            onClick={aviso}
-          >
-            <BedDouble className="size-5" />
-            <span className="text-left text-sm font-medium">
-              Solicitud de Internamiento
-            </span>
-          </Button>
+          {TIPOS.map(({ tipo, label, icono: Icono }) => (
+            <Button
+              key={tipo}
+              type="button"
+              variant="outline"
+              className="h-20 justify-start gap-3"
+              onClick={() => abrirPDF(tipo)}
+              disabled={!cirugiaId}
+            >
+              <Icono className="size-5" />
+              <span className="text-left text-sm font-medium">{label}</span>
+            </Button>
+          ))}
         </div>
 
         <DialogFooter>
