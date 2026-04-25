@@ -152,7 +152,7 @@ export function FormProgramarCirugia() {
             >
               Cancelar
             </Button>
-            <Button type="submit" disabled={enviando}>
+            <Button type="submit" disabled={enviando} className="button-ios">
               {enviando ? (
                 <>
                   <Loader2 className="size-4 animate-spin" />
