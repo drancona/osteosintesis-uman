@@ -82,3 +82,13 @@ export interface CirugiaMaterial {
   orden: number
   created_at: string
 }
+
+export interface AuditoriaProgramacion48h {
+  id: string
+  cirugia_id: string
+  usuario_id: string
+  fecha_programacion: string
+  fecha_cirugia: string
+  horas_de_antelacion: number
+  created_at: string
+}
