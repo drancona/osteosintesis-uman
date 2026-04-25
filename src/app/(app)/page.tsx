@@ -1,6 +1,6 @@
 import Link from "next/link"
 import { redirect } from "next/navigation"
-import { CalendarDays, FilePlus2 } from "lucide-react"
+import { CalendarDays, ClipboardList, FilePlus2 } from "lucide-react"
 
 import { createClient } from "@/lib/supabase/server"
 import { getTituloUsuario } from "@/lib/utils"
@@ -47,7 +47,7 @@ export default async function DashboardPage() {
         {ROL_LEGIBLE[profile.role]}
       </p>
 
-      <div className="mt-12 flex w-full max-w-md flex-col gap-3 sm:flex-row sm:justify-center">
+      <div className="mt-12 grid w-full max-w-3xl grid-cols-1 gap-3 sm:grid-cols-3">
         {puedeProgramar && (
           <Button asChild size="lg">
             <Link href="/cirugias/nueva">
@@ -56,6 +56,12 @@ export default async function DashboardPage() {
             </Link>
           </Button>
         )}
+        <Button asChild size="lg" variant="outline">
+          <Link href="/cirugias">
+            <ClipboardList className="size-5" />
+            {profile.role === "admin" ? "Cirugías" : "Mis cirugías"}
+          </Link>
+        </Button>
         <Button asChild size="lg" variant="outline">
           <Link href="/calendario">
             <CalendarDays className="size-5" />
