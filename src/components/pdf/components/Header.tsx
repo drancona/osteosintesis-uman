@@ -8,8 +8,8 @@ interface Props {
   hospital: { nombre: string; ooad: string }
   /** Línea superior del bloque institucional. */
   encabezadoInstitucional?: string
-  /** Path absoluto al logo (server-side). Si no llega, se usa fallback textual. */
-  logoPath?: string | null
+  /** Logo IMSS preparado por el route handler como Buffer (PNG). */
+  logoSrc?: { data: Buffer; format: "png" } | null
 }
 
 export function Header({
@@ -17,13 +17,13 @@ export function Header({
   subtitulo,
   hospital,
   encabezadoInstitucional = "INSTITUTO MEXICANO DEL SEGURO SOCIAL",
-  logoPath,
+  logoSrc,
 }: Props) {
   return (
     <View style={styles.headerWrap}>
       <View style={styles.headerLeft}>
-        {logoPath ? (
-          <Image src={logoPath} style={{ width: 44, height: 44 }} />
+        {logoSrc ? (
+          <Image src={logoSrc} style={{ width: 44, height: 44 }} />
         ) : (
           <Text style={styles.imssBadge}>IMSS</Text>
         )}

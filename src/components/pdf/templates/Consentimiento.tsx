@@ -34,7 +34,7 @@ export function ConsentimientoPDF({ datos }: { datos: DatosCirugia }) {
           encabezadoInstitucional="INSTITUTO MEXICANO DEL SEGURO SOCIAL · DIRECCIÓN DE PRESTACIONES MÉDICAS"
           hospital={datos.hospital}
           titulo="CARTA DE CONSENTIMIENTO BAJO INFORMACIÓN"
-          logoPath={datos.logoPath}
+          logoSrc={datos.logoSrc}
         />
 
         <MiniHeader

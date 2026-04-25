@@ -25,8 +25,12 @@ export interface DatosCirugia {
     lugar: string
     servicio: string
   }
-  /** Path absoluto al logo del IMSS (lo resuelve el route handler). */
-  logoPath?: string | null
+  /**
+   * Logo del IMSS preparado para `<Image>` de @react-pdf/renderer.
+   * Lo prepara el route handler como `{ data: Buffer, format: "png" }`
+   * para evitar problemas de resolución de path en Windows.
+   */
+  logoSrc?: { data: Buffer; format: "png" } | null
 }
 
 export function resolverMateriales(

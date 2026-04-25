@@ -20,7 +20,7 @@ export function HojaQxPDF({ datos }: { datos: DatosCirugia }) {
           encabezadoInstitucional="INSTITUTO MEXICANO DEL SEGURO SOCIAL · DIRECCIÓN DE PRESTACIONES MÉDICAS"
           hospital={datos.hospital}
           titulo="SOLICITUD Y REGISTRO DE INTERVENCIÓN QUIRÚRGICA"
-          logoPath={datos.logoPath}
+          logoSrc={datos.logoSrc}
         />
 
         <MiniHeader

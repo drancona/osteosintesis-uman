@@ -83,7 +83,7 @@ export function SolicitudMaterialPDF({ datos }: { datos: DatosCirugia }) {
           encabezadoInstitucional="INSTITUTO MEXICANO DEL SEGURO SOCIAL · JEFATURA DE PRESTACIONES MÉDICAS"
           hospital={datos.hospital}
           titulo="SOLICITUD DE MATERIAL DE OSTEOSÍNTESIS Y ENDOPRÓTESIS"
-          logoPath={datos.logoPath}
+          logoSrc={datos.logoSrc}
         />
 
         <MiniHeader

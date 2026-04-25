@@ -17,7 +17,7 @@ export function InternamientoPDF({ datos }: { datos: DatosCirugia }) {
           encabezadoInstitucional="INSTITUTO MEXICANO DEL SEGURO SOCIAL · DIRECCIÓN DE PRESTACIONES MÉDICAS"
           hospital={datos.hospital}
           titulo="SOLICITUD DE INTERNAMIENTO"
-          logoPath={datos.logoPath}
+          logoSrc={datos.logoSrc}
         />
 
         <MiniHeader

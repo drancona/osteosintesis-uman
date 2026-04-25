@@ -1,6 +1,6 @@
 import { createElement, type ReactElement } from "react"
 import path from "node:path"
-import { existsSync } from "node:fs"
+import { existsSync, readFileSync } from "node:fs"
 import { NextResponse } from "next/server"
 import { renderToBuffer, type DocumentProps } from "@react-pdf/renderer"
 
@@ -57,11 +57,14 @@ export async function GET(
     return NextResponse.json({ error: "Cirugía no encontrada" }, { status: 404 })
   }
 
+  // Cargamos el logo como Buffer y se lo pasamos a @react-pdf/renderer como
+  // { data, format }. Esto evita problemas de resolución de paths en Windows
+  // (backslashes) y de cache de la librería entre requests.
   const logoPath = path.join(process.cwd(), "public", "logo_imss.png")
-  const datosConLogo = {
-    ...datos,
-    logoPath: existsSync(logoPath) ? logoPath : null,
-  }
+  const logoSrc = existsSync(logoPath)
+    ? { data: readFileSync(logoPath), format: "png" as const }
+    : null
+  const datosConLogo: DatosCirugia = { ...datos, logoSrc }
 
   const Template = TIPOS[tipo]
   // El componente envuelve un <Document>, pero TS sólo ve el wrapper. Cast seguro.
