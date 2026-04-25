@@ -1,3 +1,5 @@
+import Image from "next/image"
+
 import { logoutAction } from "@/app/(auth)/actions"
 import { HOSPITAL } from "@/lib/constants"
 import { getTituloUsuario } from "@/lib/utils"
@@ -14,7 +16,16 @@ export function AppHeader({ profile }: { profile: Profile }) {
 
   return (
     <header className="glass sticky top-0 z-40 shadow-sm">
-      <div className="mx-auto flex h-16 w-full max-w-6xl items-center gap-4 px-4 sm:px-6">
+      <div className="mx-auto flex h-16 w-full max-w-6xl items-center gap-3 px-4 sm:px-6">
+        <Image
+          src="/logo_imss.png"
+          alt="IMSS"
+          width={40}
+          height={40}
+          priority
+          sizes="40px"
+          className="h-10 w-10 shrink-0 object-contain"
+        />
         <div className="flex flex-col">
           <span className="text-sm font-semibold leading-tight">
             {HOSPITAL.nombre}
