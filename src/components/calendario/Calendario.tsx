@@ -24,6 +24,7 @@ import "@/styles/calendario.css"
 interface Props {
   isAdmin: boolean
   usuarioId: string
+  readOnly?: boolean
 }
 
 interface RangoFechas {
@@ -45,7 +46,7 @@ function addMinutes(iso: string, minutos: number): Date {
   return new Date(new Date(iso).getTime() + minutos * 60_000)
 }
 
-export function Calendario({ isAdmin, usuarioId }: Props) {
+export function Calendario({ isAdmin, usuarioId, readOnly = false }: Props) {
   const queryClient = useQueryClient()
   const calendarRef = useRef<FullCalendar | null>(null)
   const [rango, setRango] = useState<RangoFechas | null>(null)
@@ -75,7 +76,10 @@ export function Calendario({ isAdmin, usuarioId }: Props) {
   const eventos = useMemo(
     () =>
       cirugias.map((c) => {
+        // En modo readOnly (proveedor) nadie arrastra. En modo normal, solo
+        // dueño o admin pueden mover, y solo cirugías no finalizadas.
         const puedeEditar =
+          !readOnly &&
           (c.medico.id === usuarioId || isAdmin) &&
           c.estado !== "realizada" &&
           c.estado !== "suspendida"
@@ -87,11 +91,14 @@ export function Calendario({ isAdmin, usuarioId }: Props) {
           editable: puedeEditar,
           startEditable: puedeEditar,
           durationEditable: puedeEditar,
-          classNames: [`event-${c.estado}`],
+          classNames: [
+            `event-${c.estado}`,
+            ...(readOnly ? ["event-readonly"] : []),
+          ],
           extendedProps: c as unknown as Record<string, unknown>,
         }
       }),
-    [cirugias, usuarioId, isAdmin]
+    [cirugias, usuarioId, isAdmin, readOnly]
   )
 
   async function aplicarReprogramacion(
@@ -205,8 +212,8 @@ export function Calendario({ isAdmin, usuarioId }: Props) {
         slotMaxTime="22:00:00"
         slotDuration="00:30:00"
         nowIndicator
-        editable
-        eventDurationEditable
+        editable={!readOnly}
+        eventDurationEditable={!readOnly}
         height="calc(100vh - 240px)"
         events={eventos}
         datesSet={onDatesSet}

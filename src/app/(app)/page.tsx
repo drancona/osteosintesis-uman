@@ -103,13 +103,19 @@ export default async function DashboardPage() {
             {ROL_LEGIBLE[profile.role]}
           </p>
         </header>
-        <section className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+        <section className="grid grid-cols-1 gap-4 sm:grid-cols-3">
           <Acceso
             href="/cirugias"
             Icono={ListChecks}
             titulo="Cirugías programadas"
             descripcion="Próximas, realizadas y reprogramadas"
             destacado
+          />
+          <Acceso
+            href="/calendario"
+            Icono={CalendarDays}
+            titulo="Calendario"
+            descripcion="Vista por día, semana y mes"
           />
           <Acceso
             href="/reportes/materiales"
