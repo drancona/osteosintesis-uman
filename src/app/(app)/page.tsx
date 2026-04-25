@@ -1,14 +1,19 @@
+import Link from "next/link"
 import { redirect } from "next/navigation"
+import { CalendarDays, FilePlus2 } from "lucide-react"
 
 import { createClient } from "@/lib/supabase/server"
 import { getTituloUsuario } from "@/lib/utils"
-import type { Profile } from "@/types/database"
+import { Button } from "@/components/ui/button"
+import type { Profile, UserRole } from "@/types/database"
 
 const ROL_LEGIBLE: Record<Profile["role"], string> = {
   admin: "Administrador/a",
   medico: "Médico/a",
   enfermera: "Enfermero/a",
 }
+
+const PUEDE_PROGRAMAR: UserRole[] = ["admin", "medico", "enfermera"]
 
 export default async function DashboardPage() {
   const supabase = await createClient()
@@ -31,6 +36,8 @@ export default async function DashboardPage() {
     ? `${titulo} ${profile.nombre_completo}`
     : profile.nombre_completo
 
+  const puedeProgramar = PUEDE_PROGRAMAR.includes(profile.role)
+
   return (
     <main className="flex flex-1 flex-col items-center justify-center px-6 py-16 text-center">
       <h1 className="text-3xl font-semibold tracking-tight sm:text-4xl">
@@ -39,9 +46,23 @@ export default async function DashboardPage() {
       <p className="mt-3 text-base text-muted-foreground">
         {ROL_LEGIBLE[profile.role]}
       </p>
-      <p className="mt-12 max-w-md text-sm text-muted-foreground">
-        Funcionalidades disponibles próximamente.
-      </p>
+
+      <div className="mt-12 flex w-full max-w-md flex-col gap-3 sm:flex-row sm:justify-center">
+        {puedeProgramar && (
+          <Button asChild size="lg">
+            <Link href="/cirugias/nueva">
+              <FilePlus2 className="size-5" />
+              Programar cirugía
+            </Link>
+          </Button>
+        )}
+        <Button asChild size="lg" variant="outline">
+          <Link href="/calendario">
+            <CalendarDays className="size-5" />
+            Ver calendario
+          </Link>
+        </Button>
+      </div>
     </main>
   )
 }
