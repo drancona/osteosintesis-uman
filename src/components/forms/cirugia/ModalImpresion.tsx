@@ -51,7 +51,7 @@ export function ModalImpresion({ open, cirugiaId, onClose }: Props) {
               key={tipo}
               type="button"
               variant="outline"
-              className="h-24 items-center justify-start gap-3 whitespace-normal py-3 text-left"
+              className="button-ios h-24 items-center justify-start gap-3 whitespace-normal py-3 text-left"
               onClick={() => abrirPDF(tipo)}
               disabled={!cirugiaId}
             >
