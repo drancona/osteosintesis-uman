@@ -8,7 +8,12 @@ import {
 import { PanelCirugias } from "@/components/cirugias/PanelCirugias"
 import type { EstadoCirugia, Profile, UserRole } from "@/types/database"
 
-const ROLES_PERMITIDOS: UserRole[] = ["admin", "medico", "enfermera"]
+const ROLES_PERMITIDOS: UserRole[] = [
+  "admin",
+  "medico",
+  "enfermera",
+  "proveedor",
+]
 
 type EstadoFiltro = EstadoCirugia | "todas"
 
@@ -44,9 +49,14 @@ export default async function PanelCirugiasPage({
   }
 
   const esAdmin = profile.role === "admin"
+  const esProveedor = profile.role === "proveedor"
+  // Admin y proveedor ven el panel completo del servicio.
+  // Médico/enfermera siguen viendo solo las suyas.
+  // RLS de Fase 8 ya filtra cirugías suspendidas para proveedor automáticamente.
+  const verTodos = esAdmin || esProveedor
   const cirugias = await listarCirugias({
     estado,
-    medicoId: esAdmin ? undefined : profile.id,
+    medicoId: verTodos ? undefined : profile.id,
   })
 
   return (
@@ -55,6 +65,8 @@ export default async function PanelCirugiasPage({
         cirugias={cirugias}
         estadoActual={estado}
         esAdmin={esAdmin}
+        esProveedor={esProveedor}
+        usuarioId={profile.id}
       />
     </main>
   )
