@@ -9,7 +9,11 @@ export type PrioridadCirugia = "baja" | "media" | "alta"
 
 export type TipoOperacion = "electiva" | "urgencia"
 
-export type EstadoCirugia = "programada" | "realizada" | "cancelada"
+export type EstadoCirugia =
+  | "pendiente"
+  | "realizada"
+  | "suspendida"
+  | "reprogramada"
 
 export type SistemaOsteo =
   | "Grandes Fragmentos"
