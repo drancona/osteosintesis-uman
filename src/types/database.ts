@@ -1,7 +1,7 @@
 // Tipos de la base de datos Postgres / Supabase.
 // Espejan el schema de supabase/migrations/0001_initial_schema.sql.
 
-export type UserRole = "admin" | "medico" | "enfermera"
+export type UserRole = "admin" | "medico" | "enfermera" | "proveedor"
 
 export type TipoIncapacidad = "riesgo_trabajo" | "enfermedad_general"
 
@@ -24,7 +24,7 @@ export type SistemaOsteo =
 
 export interface Profile {
   id: string
-  matricula_imss: string
+  matricula_imss: string | null
   nombre_completo: string
   role: UserRole
   activo: boolean
