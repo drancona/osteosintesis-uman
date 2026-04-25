@@ -4,11 +4,22 @@
 
 @custom-variant dark (&:is(.dark *));
 
+/* ============================================================
+   Tipografía: usamos system fonts (San Francisco en Apple,
+   Segoe UI en Windows, Roboto en Android). Pesos 400/500/600/700.
+   ============================================================ */
+:root {
+  --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI",
+    "Helvetica Neue", Roboto, Arial, sans-serif;
+  --font-mono: ui-monospace, "SF Mono", Menlo, Monaco, Consolas,
+    "Liberation Mono", monospace;
+}
+
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --font-sans: var(--font-sans);
-  --font-mono: var(--font-geist-mono);
+  --font-mono: var(--font-mono);
   --font-heading: var(--font-sans);
   --color-sidebar-ring: var(--sidebar-ring);
   --color-sidebar-border: var(--sidebar-border);
@@ -27,6 +38,7 @@
   --color-input: var(--input);
   --color-border: var(--border);
   --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
   --color-accent-foreground: var(--accent-foreground);
   --color-accent: var(--accent);
   --color-muted-foreground: var(--muted-foreground);
@@ -35,6 +47,11 @@
   --color-secondary: var(--secondary);
   --color-primary-foreground: var(--primary-foreground);
   --color-primary: var(--primary);
+  --color-primary-soft: var(--primary-soft);
+  --color-primary-soft-foreground: var(--primary-soft-foreground);
+  --color-success: var(--success);
+  --color-warning: var(--warning);
+  --color-info: var(--info);
   --color-popover-foreground: var(--popover-foreground);
   --color-popover: var(--popover);
   --color-card-foreground: var(--card-foreground);
@@ -48,83 +65,172 @@
   --radius-4xl: calc(var(--radius) * 2.6);
 }
 
+/* ============================================================
+   Paleta IMSS — light mode
+   Verde institucional #006657 como primary.
+   Gris cálido (Stone scale) para neutrales.
+   ============================================================ */
 :root {
-  --background: oklch(1 0 0);
-  --foreground: oklch(0.129 0.042 264.695);
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0.129 0.042 264.695);
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.129 0.042 264.695);
-  --primary: oklch(0.208 0.042 265.755);
-  --primary-foreground: oklch(0.984 0.003 247.858);
-  --secondary: oklch(0.968 0.007 247.896);
-  --secondary-foreground: oklch(0.208 0.042 265.755);
-  --muted: oklch(0.968 0.007 247.896);
-  --muted-foreground: oklch(0.554 0.046 257.417);
-  --accent: oklch(0.968 0.007 247.896);
-  --accent-foreground: oklch(0.208 0.042 265.755);
-  --destructive: oklch(0.577 0.245 27.325);
-  --border: oklch(0.929 0.013 255.508);
-  --input: oklch(0.929 0.013 255.508);
-  --ring: oklch(0.704 0.04 256.788);
-  --chart-1: oklch(0.646 0.222 41.116);
-  --chart-2: oklch(0.6 0.118 184.704);
-  --chart-3: oklch(0.398 0.07 227.392);
-  --chart-4: oklch(0.828 0.189 84.429);
-  --chart-5: oklch(0.769 0.188 70.08);
-  --radius: 0.625rem;
-  --sidebar: oklch(0.984 0.003 247.858);
-  --sidebar-foreground: oklch(0.129 0.042 264.695);
-  --sidebar-primary: oklch(0.208 0.042 265.755);
-  --sidebar-primary-foreground: oklch(0.984 0.003 247.858);
-  --sidebar-accent: oklch(0.968 0.007 247.896);
-  --sidebar-accent-foreground: oklch(0.208 0.042 265.755);
-  --sidebar-border: oklch(0.929 0.013 255.508);
-  --sidebar-ring: oklch(0.704 0.04 256.788);
+  --background: #FAFAF9;
+  --foreground: #1C1917;
+
+  --card: #FFFFFF;
+  --card-foreground: #1C1917;
+  --popover: #FFFFFF;
+  --popover-foreground: #1C1917;
+
+  --primary: #006657;
+  --primary-foreground: #FFFFFF;
+  --primary-soft: #E6F3F1;
+  --primary-soft-foreground: #003D34;
+
+  --secondary: #F5F5F4;
+  --secondary-foreground: #1C1917;
+
+  --muted: #F5F5F4;
+  --muted-foreground: #78716C;
+
+  --accent: #E6F3F1;
+  --accent-foreground: #003D34;
+
+  --destructive: #DC2626;
+  --destructive-foreground: #FFFFFF;
+
+  --success: #16A34A;
+  --warning: #D97706;
+  --info: #0284C7;
+
+  --border: #E7E5E4;
+  --input: #E7E5E4;
+  --ring: #006657;
+
+  /* Charts (paleta verde-azul-ámbar derivada del primary) */
+  --chart-1: #006657;
+  --chart-2: #0284C7;
+  --chart-3: #D97706;
+  --chart-4: #16A34A;
+  --chart-5: #78716C;
+
+  --radius: 0.75rem;
+
+  /* Sidebar — mismo paleta principal */
+  --sidebar: #FFFFFF;
+  --sidebar-foreground: #1C1917;
+  --sidebar-primary: #006657;
+  --sidebar-primary-foreground: #FFFFFF;
+  --sidebar-accent: #E6F3F1;
+  --sidebar-accent-foreground: #003D34;
+  --sidebar-border: #E7E5E4;
+  --sidebar-ring: #006657;
 }
 
+/* ============================================================
+   Paleta IMSS — dark mode
+   Primary aclarado a #1A8576 para mantener contraste sobre fondo oscuro.
+   ============================================================ */
 .dark {
-  --background: oklch(0.129 0.042 264.695);
-  --foreground: oklch(0.984 0.003 247.858);
-  --card: oklch(0.208 0.042 265.755);
-  --card-foreground: oklch(0.984 0.003 247.858);
-  --popover: oklch(0.208 0.042 265.755);
-  --popover-foreground: oklch(0.984 0.003 247.858);
-  --primary: oklch(0.929 0.013 255.508);
-  --primary-foreground: oklch(0.208 0.042 265.755);
-  --secondary: oklch(0.279 0.041 260.031);
-  --secondary-foreground: oklch(0.984 0.003 247.858);
-  --muted: oklch(0.279 0.041 260.031);
-  --muted-foreground: oklch(0.704 0.04 256.788);
-  --accent: oklch(0.279 0.041 260.031);
-  --accent-foreground: oklch(0.984 0.003 247.858);
-  --destructive: oklch(0.704 0.191 22.216);
-  --border: oklch(1 0 0 / 10%);
-  --input: oklch(1 0 0 / 15%);
-  --ring: oklch(0.551 0.027 264.364);
-  --chart-1: oklch(0.488 0.243 264.376);
-  --chart-2: oklch(0.696 0.17 162.48);
-  --chart-3: oklch(0.769 0.188 70.08);
-  --chart-4: oklch(0.627 0.265 303.9);
-  --chart-5: oklch(0.645 0.246 16.439);
-  --sidebar: oklch(0.208 0.042 265.755);
-  --sidebar-foreground: oklch(0.984 0.003 247.858);
-  --sidebar-primary: oklch(0.488 0.243 264.376);
-  --sidebar-primary-foreground: oklch(0.984 0.003 247.858);
-  --sidebar-accent: oklch(0.279 0.041 260.031);
-  --sidebar-accent-foreground: oklch(0.984 0.003 247.858);
-  --sidebar-border: oklch(1 0 0 / 10%);
-  --sidebar-ring: oklch(0.551 0.027 264.364);
+  --background: #0A0A0A;
+  --foreground: #FAFAF9;
+
+  --card: #171717;
+  --card-foreground: #FAFAF9;
+  --popover: #171717;
+  --popover-foreground: #FAFAF9;
+
+  --primary: #1A8576;
+  --primary-foreground: #FFFFFF;
+  --primary-soft: #0D2E29;
+  --primary-soft-foreground: #A8D5CD;
+
+  --secondary: #262626;
+  --secondary-foreground: #FAFAF9;
+
+  --muted: #262626;
+  --muted-foreground: #A8A29E;
+
+  --accent: #0D2E29;
+  --accent-foreground: #A8D5CD;
+
+  --destructive: #EF4444;
+  --destructive-foreground: #FFFFFF;
+
+  --success: #22C55E;
+  --warning: #F59E0B;
+  --info: #38BDF8;
+
+  --border: #404040;
+  --input: #404040;
+  --ring: #1A8576;
+
+  --chart-1: #1A8576;
+  --chart-2: #38BDF8;
+  --chart-3: #F59E0B;
+  --chart-4: #22C55E;
+  --chart-5: #A8A29E;
+
+  --sidebar: #171717;
+  --sidebar-foreground: #FAFAF9;
+  --sidebar-primary: #1A8576;
+  --sidebar-primary-foreground: #FFFFFF;
+  --sidebar-accent: #0D2E29;
+  --sidebar-accent-foreground: #A8D5CD;
+  --sidebar-border: #404040;
+  --sidebar-ring: #1A8576;
 }
 
 @layer base {
   * {
     @apply border-border outline-ring/50;
   }
+  html {
+    font-family: var(--font-sans);
+  }
   body {
     @apply bg-background text-foreground;
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
   }
-  html {
-    @apply font-sans;
-  }
+}
+
+/* ============================================================
+   Liquid glass — usado puntualmente en header, breadcrumbs sticky,
+   modales, popovers y selects.
+   ============================================================ */
+.glass {
+  background: color-mix(in srgb, var(--card) 70%, transparent);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  border: 1px solid color-mix(in srgb, var(--border) 60%, transparent);
+}
+
+.glass-strong {
+  background: color-mix(in srgb, var(--card) 85%, transparent);
+  backdrop-filter: blur(24px) saturate(200%);
+  -webkit-backdrop-filter: blur(24px) saturate(200%);
+  border: 1px solid color-mix(in srgb, var(--border) 70%, transparent);
+}
+
+/* ============================================================
+   Botones tipo iOS — feedback al presionar.
+   ============================================================ */
+.button-ios {
+  transition:
+    transform 100ms cubic-bezier(0.32, 0.72, 0, 1),
+    background-color 150ms ease,
+    box-shadow 150ms ease,
+    filter 150ms ease;
+}
+.button-ios:active {
+  transform: scale(0.97);
+}
+.button-ios:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Override sutil del Dialog overlay para usar el blur global */
+[data-slot="dialog-overlay"] {
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
 }
