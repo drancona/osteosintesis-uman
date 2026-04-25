@@ -10,9 +10,13 @@ export function cn(...inputs: ClassValue[]) {
 const PREFIJO_PRESENTE = /^(dr|dra|enf|lic|mtro|mtra)\.?\s/i
 
 // Devuelve un prefijo corto para acompañar el nombre del usuario en saludos.
-// Si el nombre ya viene con prefijo (ej. "Dra. Ana Pérez") devuelve "" para evitar
-// duplicarlo. Para enfermera usa "Enf."; para médico/admin usa "Dr." por defecto.
+// Reglas por rol:
+//   - medico    → "Dr." (a menos que el nombre ya traiga prefijo Dr/Dra/etc.)
+//   - enfermera → "Enf." (idem: si el nombre ya empieza con Enf., no lo duplica)
+//   - admin     → "" (sin prefijo)
+//   - proveedor → "" (no es personal médico)
 export function getTituloUsuario(role: UserRole, nombreCompleto: string): string {
+  if (role === "admin" || role === "proveedor") return ""
   if (PREFIJO_PRESENTE.test(nombreCompleto.trim())) return ""
   if (role === "enfermera") return "Enf."
   return "Dr."
