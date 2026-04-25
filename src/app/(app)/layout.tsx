@@ -2,6 +2,7 @@ import { redirect } from "next/navigation"
 
 import { createClient } from "@/lib/supabase/server"
 import { AppHeader } from "@/components/app-header"
+import { Breadcrumbs } from "@/components/layout/Breadcrumbs"
 import { logoutAction } from "@/app/(auth)/actions"
 import { Button } from "@/components/ui/button"
 import {
@@ -61,6 +62,11 @@ export default async function AppLayout({
   return (
     <div className="flex min-h-full flex-1 flex-col">
       <AppHeader profile={profile} />
+      <div className="sticky top-16 z-30 border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+        <div className="mx-auto w-full max-w-6xl px-4 py-2 sm:px-6">
+          <Breadcrumbs />
+        </div>
+      </div>
       <div className="flex flex-1 flex-col">{children}</div>
     </div>
   )

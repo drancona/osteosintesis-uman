@@ -12,7 +12,7 @@ export function AppHeader({ profile }: { profile: Profile }) {
     : profile.nombre_completo
 
   return (
-    <header className="border-b bg-background">
+    <header className="sticky top-0 z-40 border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/80">
       <div className="mx-auto flex h-16 w-full max-w-6xl items-center gap-4 px-4 sm:px-6">
         <div className="flex flex-col">
           <span className="text-sm font-semibold leading-tight">
