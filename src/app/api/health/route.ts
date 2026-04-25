@@ -1,9 +1,16 @@
 import { NextResponse } from "next/server"
-import { createClient } from "@/lib/supabase/server"
+import { createClient } from "@supabase/supabase-js"
 
 export async function GET() {
   try {
-    const supabase = await createClient()
+    // El health check usa el service role para bypassar RLS y poder contar
+    // sin sesión de usuario.
+    const supabase = createClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL!,
+      process.env.SUPABASE_SERVICE_ROLE_KEY!,
+      { auth: { persistSession: false } }
+    )
+
     const { count, error } = await supabase
       .from("catalogo_material")
       .select("*", { count: "exact", head: true })
