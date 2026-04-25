@@ -8,6 +8,8 @@ export const breadcrumbLabels: Record<string, string> = {
   usuarios: "Usuarios",
   catalogo: "Catálogo",
   calendario: "Calendario",
+  reportes: "Reportes",
+  materiales: "Materiales",
 }
 
 // UUID v4-ish (acepta cualquier hex, no validamos versión).
