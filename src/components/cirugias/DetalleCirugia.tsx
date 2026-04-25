@@ -1,19 +1,33 @@
 "use client"
 
 import { useState, useTransition } from "react"
-import { Printer } from "lucide-react"
+import { useRouter } from "next/navigation"
+import { Loader2, Printer, Trash2 } from "lucide-react"
 import { format, parseISO } from "date-fns"
 import { es } from "date-fns/locale"
 import { toast } from "sonner"
 
 import type { DatosCirugia } from "@/components/pdf/datos"
 import type { EstadoCirugia } from "@/types/database"
-import { cambiarEstadoCirugiaAction } from "@/app/(app)/cirugias/[id]/actions"
+import {
+  cambiarEstadoCirugiaAction,
+  eliminarCirugiaAction,
+} from "@/app/(app)/cirugias/[id]/actions"
 import { ModalImpresion } from "@/components/forms/cirugia/ModalImpresion"
 import { BadgeEstado } from "@/components/cirugias/PanelCirugias"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Separator } from "@/components/ui/separator"
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog"
 import {
   Select,
   SelectContent,
@@ -36,6 +50,7 @@ interface Props {
   datos: DatosCirugia
   puedeEditar: boolean
   puedeImprimir?: boolean
+  puedeEliminar?: boolean
 }
 
 const ESTADOS: { value: EstadoCirugia; label: string }[] = [
@@ -71,11 +86,15 @@ export function DetalleCirugia({
   datos,
   puedeEditar,
   puedeImprimir = true,
+  puedeEliminar = false,
 }: Props) {
+  const router = useRouter()
   const { cirugia, paciente, medico, materiales } = datos
   const [estado, setEstado] = useState<EstadoCirugia>(cirugia.estado)
   const [showImpresion, setShowImpresion] = useState(false)
   const [showReprogramar, setShowReprogramar] = useState(false)
+  const [showEliminar, setShowEliminar] = useState(false)
+  const [eliminando, setEliminando] = useState(false)
   const [nuevaFecha, setNuevaFecha] = useState<string>(
     isoLocalParaInput(cirugia.fecha_cirugia)
   )
@@ -98,6 +117,20 @@ export function DetalleCirugia({
       }
       setEstado(siguiente)
       toast.success("Estado actualizado")
+    })
+  }
+
+  function confirmarEliminar() {
+    setEliminando(true)
+    startTransition(async () => {
+      const r = await eliminarCirugiaAction(cirugia.id)
+      setEliminando(false)
+      if (r.error) {
+        toast.error(r.error)
+        return
+      }
+      toast.success("Cirugía eliminada")
+      router.push("/cirugias")
     })
   }
 
@@ -189,7 +222,7 @@ export function DetalleCirugia({
         </CardContent>
       </Card>
 
-      {(puedeImprimir || puedeEditar) && (
+      {(puedeImprimir || puedeEditar || puedeEliminar) && (
         <Card>
           <CardHeader>
             <CardTitle className="text-base">Acciones</CardTitle>
@@ -231,6 +264,20 @@ export function DetalleCirugia({
                 </div>
               </>
             )}
+
+            {puedeEliminar && (
+              <>
+                <Separator />
+                <Button
+                  variant="destructive"
+                  onClick={() => setShowEliminar(true)}
+                  className="button-ios w-full sm:w-auto"
+                >
+                  <Trash2 className="size-4" />
+                  Eliminar cirugía
+                </Button>
+              </>
+            )}
           </CardContent>
         </Card>
       )}
@@ -240,6 +287,46 @@ export function DetalleCirugia({
         cirugiaId={cirugia.id}
         onClose={() => setShowImpresion(false)}
       />
+
+      <AlertDialog
+        open={showEliminar}
+        onOpenChange={(v) => !v && !eliminando && setShowEliminar(false)}
+      >
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>
+              ¿Eliminar cirugía permanentemente?
+            </AlertDialogTitle>
+            <AlertDialogDescription>
+              Esta acción no se puede deshacer. Se eliminará la cirugía,
+              todos sus materiales solicitados y los registros de auditoría
+              asociados. El paciente no se eliminará.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel disabled={eliminando} className="button-ios">
+              Cancelar
+            </AlertDialogCancel>
+            <AlertDialogAction
+              disabled={eliminando}
+              onClick={(e) => {
+                e.preventDefault()
+                confirmarEliminar()
+              }}
+              className="button-ios bg-destructive text-destructive-foreground hover:bg-destructive/90"
+            >
+              {eliminando ? (
+                <>
+                  <Loader2 className="size-4 animate-spin" />
+                  Eliminando…
+                </>
+              ) : (
+                "Eliminar permanentemente"
+              )}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
 
       <Dialog
         open={showReprogramar}

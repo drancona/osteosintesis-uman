@@ -3,9 +3,11 @@
 import { revalidatePath } from "next/cache"
 
 import { createClient } from "@/lib/supabase/server"
+import { createAdminClient } from "@/lib/supabase/admin"
 import type { EstadoCirugia, Profile } from "@/types/database"
 
 export type CambioEstadoResult = { error?: string; ok?: boolean }
+export type EliminarResult = { error?: string; success?: boolean }
 
 const ESTADOS_VALIDOS: EstadoCirugia[] = [
   "pendiente",
@@ -97,4 +99,56 @@ export async function cambiarEstadoCirugiaAction(
   revalidatePath("/cirugias")
   revalidatePath(`/cirugias/${cirugiaId}`)
   return { ok: true }
+}
+
+/**
+ * Hard delete de una cirugía. Sólo el médico dueño o un admin pueden hacerlo.
+ * Las FKs ON DELETE CASCADE en cirugia_materiales y auditoria_programacion_48h
+ * se encargan de los registros dependientes; el paciente queda intacto.
+ *
+ * Usamos service-role tras verificar el permiso porque la única DELETE policy
+ * existente sobre `cirugias` es para admin; el médico dueño no puede borrar
+ * vía RLS pero sí debe poder por regla de producto.
+ */
+export async function eliminarCirugiaAction(
+  cirugiaId: string
+): Promise<EliminarResult> {
+  const supabase = await createClient()
+  const {
+    data: { user },
+  } = await supabase.auth.getUser()
+  if (!user) return { error: "Sesión expirada. Inicia sesión nuevamente." }
+
+  const { data: profile } = await supabase
+    .from("profiles")
+    .select("id, role, activo")
+    .eq("id", user.id)
+    .single<Pick<Profile, "id" | "role" | "activo">>()
+  if (!profile?.activo) return { error: "Perfil inactivo" }
+
+  const { data: cirugia, error: errGet } = await supabase
+    .from("cirugias")
+    .select("id, medico_id")
+    .eq("id", cirugiaId)
+    .maybeSingle()
+  if (errGet) return { error: errGet.message }
+  if (!cirugia) return { error: "Cirugía no encontrada" }
+
+  const esAdmin = profile.role === "admin"
+  const esDuena =
+    profile.role === "medico" && cirugia.medico_id === profile.id
+  if (!esAdmin && !esDuena) {
+    return { error: "No tienes permiso para eliminar esta cirugía" }
+  }
+
+  const supaAdmin = createAdminClient()
+  const { error: errDel } = await supaAdmin
+    .from("cirugias")
+    .delete()
+    .eq("id", cirugiaId)
+  if (errDel) return { error: errDel.message }
+
+  revalidatePath("/cirugias")
+  revalidatePath("/calendario")
+  return { success: true }
 }
