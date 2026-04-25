@@ -35,6 +35,7 @@ import {
 interface Props {
   datos: DatosCirugia
   puedeEditar: boolean
+  puedeImprimir?: boolean
 }
 
 const ESTADOS: { value: EstadoCirugia; label: string }[] = [
@@ -66,7 +67,11 @@ function isoLocalParaInput(iso: string): string {
   return new Date(d.getTime() - tz).toISOString().slice(0, 16)
 }
 
-export function DetalleCirugia({ datos, puedeEditar }: Props) {
+export function DetalleCirugia({
+  datos,
+  puedeEditar,
+  puedeImprimir = true,
+}: Props) {
   const { cirugia, paciente, medico, materiales } = datos
   const [estado, setEstado] = useState<EstadoCirugia>(cirugia.estado)
   const [showImpresion, setShowImpresion] = useState(false)
@@ -184,44 +189,51 @@ export function DetalleCirugia({ datos, puedeEditar }: Props) {
         </CardContent>
       </Card>
 
-      <Card>
-        <CardHeader>
-          <CardTitle className="text-base">Acciones</CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          <Button onClick={() => setShowImpresion(true)} className="w-full sm:w-auto">
-            <Printer className="size-4" />
-            Imprimir formatos
-          </Button>
+      {(puedeImprimir || puedeEditar) && (
+        <Card>
+          <CardHeader>
+            <CardTitle className="text-base">Acciones</CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            {puedeImprimir && (
+              <Button
+                onClick={() => setShowImpresion(true)}
+                className="button-ios w-full sm:w-auto"
+              >
+                <Printer className="size-4" />
+                Imprimir formatos
+              </Button>
+            )}
 
-          {puedeEditar && (
-            <>
-              <Separator />
-              <div className="flex flex-col gap-2 sm:flex-row sm:items-end">
-                <div className="flex-1">
-                  <Label className="mb-1 block text-xs">Cambiar estado</Label>
-                  <Select
-                    value={estado}
-                    onValueChange={(v) => aplicarCambioEstado(v as EstadoCirugia)}
-                    disabled={trabajando}
-                  >
-                    <SelectTrigger>
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {ESTADOS.map((e) => (
-                        <SelectItem key={e.value} value={e.value}>
-                          {e.label}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
+            {puedeEditar && (
+              <>
+                {puedeImprimir && <Separator />}
+                <div className="flex flex-col gap-2 sm:flex-row sm:items-end">
+                  <div className="flex-1">
+                    <Label className="mb-1 block text-xs">Cambiar estado</Label>
+                    <Select
+                      value={estado}
+                      onValueChange={(v) => aplicarCambioEstado(v as EstadoCirugia)}
+                      disabled={trabajando}
+                    >
+                      <SelectTrigger>
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {ESTADOS.map((e) => (
+                          <SelectItem key={e.value} value={e.value}>
+                            {e.label}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
                 </div>
-              </div>
-            </>
-          )}
-        </CardContent>
-      </Card>
+              </>
+            )}
+          </CardContent>
+        </Card>
+      )}
 
       <ModalImpresion
         open={showImpresion}

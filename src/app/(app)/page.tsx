@@ -1,6 +1,7 @@
 import Link from "next/link"
 import { redirect } from "next/navigation"
 import {
+  BarChart3,
   BookOpen,
   CalendarDays,
   ListChecks,
@@ -16,6 +17,7 @@ const ROL_LEGIBLE: Record<Profile["role"], string> = {
   admin: "Administrador/a",
   medico: "Médico/a",
   enfermera: "Enfermero/a",
+  proveedor: "Proveedor de material",
 }
 
 const PUEDE_PROGRAMAR: UserRole[] = ["admin", "medico", "enfermera"]
@@ -88,6 +90,37 @@ export default async function DashboardPage() {
     : profile.nombre_completo
 
   const puedeProgramar = PUEDE_PROGRAMAR.includes(profile.role)
+  const esProveedor = profile.role === "proveedor"
+
+  if (esProveedor) {
+    return (
+      <main className="mx-auto w-full max-w-5xl px-4 py-12 sm:px-6 sm:py-16">
+        <header className="mb-10 space-y-2">
+          <h1 className="text-3xl font-semibold tracking-tight sm:text-4xl">
+            Bienvenido, {saludo}
+          </h1>
+          <p className="text-sm text-muted-foreground">
+            {ROL_LEGIBLE[profile.role]}
+          </p>
+        </header>
+        <section className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+          <Acceso
+            href="/cirugias"
+            Icono={ListChecks}
+            titulo="Cirugías programadas"
+            descripcion="Próximas, realizadas y reprogramadas"
+            destacado
+          />
+          <Acceso
+            href="/reportes/materiales"
+            Icono={BarChart3}
+            titulo="Reporte de materiales"
+            descripcion="Filtra y exporta consumo"
+          />
+        </section>
+      </main>
+    )
+  }
 
   return (
     <main className="mx-auto w-full max-w-5xl px-4 py-12 sm:px-6 sm:py-16">
@@ -125,7 +158,7 @@ export default async function DashboardPage() {
       </section>
 
       {profile.role === "admin" && (
-        <section className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2">
+        <section className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-3">
           <Acceso
             href="/admin/usuarios"
             Icono={Users}
@@ -137,6 +170,12 @@ export default async function DashboardPage() {
             Icono={BookOpen}
             titulo="Administrar catálogo"
             descripcion="Material de osteosíntesis"
+          />
+          <Acceso
+            href="/reportes/materiales"
+            Icono={BarChart3}
+            titulo="Reporte de materiales"
+            descripcion="Filtra y exporta consumo"
           />
         </section>
       )}

@@ -43,10 +43,14 @@ export default async function DetalleCirugiaPage({
   }
 
   const esAdmin = profile.role === "admin"
+  const esProveedor = profile.role === "proveedor"
   const esDuena = datos.cirugia.medico_id === profile.id
   const puedeEditar = esAdmin || esDuena
+  // Proveedor entra en modo lectura: ve los datos pero sin acciones (cambio
+  // de estado, reprogramación ni impresión, que es uso interno del personal).
+  const puedeImprimir = !esProveedor
 
-  if (!esAdmin && !esDuena) {
+  if (!esAdmin && !esDuena && !esProveedor) {
     return (
       <main className="mx-auto w-full max-w-3xl px-4 py-12 sm:px-6">
         <p className="text-sm text-destructive">
@@ -69,7 +73,11 @@ export default async function DetalleCirugiaPage({
           </Link>
         </Button>
       </div>
-      <DetalleCirugia datos={datos} puedeEditar={puedeEditar} />
+      <DetalleCirugia
+        datos={datos}
+        puedeEditar={puedeEditar}
+        puedeImprimir={puedeImprimir}
+      />
     </main>
   )
 }
