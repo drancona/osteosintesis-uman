@@ -18,7 +18,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table"
-import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { EstadoTabs } from "./EstadoTabs"
 
 type EstadoFiltro = EstadoCirugia | "todas"
 
@@ -51,14 +51,20 @@ export function BadgeEstado({ estado }: { estado: EstadoCirugia }) {
       return (
         <Badge
           variant="outline"
-          className="border-amber-500 text-amber-700 dark:text-amber-400"
+          style={{
+            borderColor: "var(--warning)",
+            color: "var(--warning)",
+          }}
         >
           {LABEL_ESTADO[estado]}
         </Badge>
       )
     case "realizada":
       return (
-        <Badge className="bg-emerald-600 text-white hover:bg-emerald-700">
+        <Badge
+          style={{ backgroundColor: "var(--success)" }}
+          className="text-white hover:opacity-90"
+        >
           {LABEL_ESTADO[estado]}
         </Badge>
       )
@@ -75,7 +81,7 @@ export function PanelCirugias({ cirugias, estadoActual, esAdmin }: Props) {
   const router = useRouter()
   const searchParams = useSearchParams()
 
-  function cambiarTab(value: string) {
+  function cambiarTab(value: EstadoFiltro) {
     const params = new URLSearchParams(searchParams.toString())
     params.set("estado", value)
     router.push(`/cirugias?${params.toString()}`)
@@ -92,28 +98,27 @@ export function PanelCirugias({ cirugias, estadoActual, esAdmin }: Props) {
         </p>
       </header>
 
-      <Tabs value={estadoActual} onValueChange={cambiarTab}>
-        <TabsList className="grid w-full grid-cols-2 sm:flex sm:w-auto">
-          {TABS.map((t) => (
-            <TabsTrigger key={t.value} value={t.value}>
-              {t.label}
-            </TabsTrigger>
-          ))}
-        </TabsList>
-      </Tabs>
+      <div className="overflow-x-auto">
+        <EstadoTabs<EstadoFiltro>
+          tabs={TABS}
+          value={estadoActual}
+          onChange={cambiarTab}
+          layoutId="panel-cirugias-tabs"
+        />
+      </div>
 
       {cirugias.length === 0 ? (
-        <div className="flex flex-col items-center justify-center gap-2 rounded-lg border border-dashed py-16 text-center">
+        <div className="flex flex-col items-center justify-center gap-3 rounded-2xl border border-dashed py-20 text-center">
           <CalendarOff className="size-10 text-muted-foreground" />
           <p className="text-sm text-muted-foreground">
             No hay cirugías {estadoActual === "todas" ? "registradas" : LABEL_ESTADO[estadoActual as EstadoCirugia]?.toLowerCase()}.
           </p>
         </div>
       ) : (
-        <div className="rounded-lg border">
+        <div className="overflow-hidden rounded-2xl border bg-card shadow-sm">
           <Table>
             <TableHeader>
-              <TableRow>
+              <TableRow className="bg-muted/40 hover:bg-muted/40">
                 <TableHead className="w-[160px]">Fecha y hora</TableHead>
                 <TableHead>Paciente</TableHead>
                 <TableHead>Procedimiento</TableHead>
@@ -125,7 +130,11 @@ export function PanelCirugias({ cirugias, estadoActual, esAdmin }: Props) {
             </TableHeader>
             <TableBody>
               {cirugias.map((c) => (
-                <TableRow key={c.id}>
+                <TableRow
+                  key={c.id}
+                  className="button-ios cursor-pointer transition-colors duration-150 hover:bg-muted/50"
+                  onClick={() => router.push(`/cirugias/${c.id}`)}
+                >
                   <TableCell className="font-mono text-xs">
                     {formatearFechaHora(c.fecha_cirugia)}
                   </TableCell>
@@ -157,7 +166,12 @@ export function PanelCirugias({ cirugias, estadoActual, esAdmin }: Props) {
                     </TableCell>
                   )}
                   <TableCell className="text-right">
-                    <Button asChild variant="ghost" size="sm">
+                    <Button
+                      asChild
+                      variant="ghost"
+                      size="sm"
+                      onClick={(e) => e.stopPropagation()}
+                    >
                       <Link href={`/cirugias/${c.id}`}>
                         <Eye className="size-4" />
                         Ver
