@@ -1,16 +1,19 @@
 "use client"
 
 import { useMemo, useState, useTransition } from "react"
+import { useRouter } from "next/navigation"
 import { format, parseISO } from "date-fns"
 import { es } from "date-fns/locale"
 import { toast } from "sonner"
-import { Search } from "lucide-react"
+import { Plus, Search } from "lucide-react"
 
 import {
   cambiarRolUsuarioAction,
   toggleActivoUsuarioAction,
 } from "@/app/(app)/admin/usuarios/actions"
+import { DialogCrearProveedor } from "@/components/admin/DialogCrearProveedor"
 import type { UserRole } from "@/types/database"
+import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Switch } from "@/components/ui/switch"
 import {
@@ -33,7 +36,7 @@ import { Badge } from "@/components/ui/badge"
 export interface UsuarioFila {
   id: string
   nombre_completo: string
-  matricula_imss: string
+  matricula_imss: string | null
   email: string
   role: UserRole
   activo: boolean
@@ -49,6 +52,7 @@ const ROL_OPTS: { value: UserRole; label: string }[] = [
   { value: "medico", label: "Médico/a" },
   { value: "enfermera", label: "Enfermero/a" },
   { value: "admin", label: "Administrador/a" },
+  { value: "proveedor", label: "Proveedor" },
 ]
 
 function fmt(iso: string): string {
@@ -60,8 +64,10 @@ function normalizar(s: string) {
 }
 
 export function PanelUsuarios({ usuarios, actualUsuarioId }: Props) {
+  const router = useRouter()
   const [filtro, setFiltro] = useState("")
   const [filas, setFilas] = useState<UsuarioFila[]>(usuarios)
+  const [crearProveedor, setCrearProveedor] = useState(false)
   const [, startTransition] = useTransition()
 
   const filtradas = useMemo(() => {
@@ -70,7 +76,7 @@ export function PanelUsuarios({ usuarios, actualUsuarioId }: Props) {
     return filas.filter(
       (u) =>
         normalizar(u.nombre_completo).includes(q) ||
-        normalizar(u.matricula_imss).includes(q) ||
+        normalizar(u.matricula_imss ?? "").includes(q) ||
         normalizar(u.email).includes(q)
     )
   }, [filas, filtro])
@@ -111,8 +117,8 @@ export function PanelUsuarios({ usuarios, actualUsuarioId }: Props) {
 
   return (
     <div className="space-y-4">
-      <div className="flex items-center gap-3">
-        <div className="relative w-full max-w-sm">
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
+        <div className="relative w-full sm:max-w-sm">
           <Search className="pointer-events-none absolute top-1/2 left-2.5 size-4 -translate-y-1/2 text-muted-foreground" />
           <Input
             value={filtro}
@@ -124,6 +130,14 @@ export function PanelUsuarios({ usuarios, actualUsuarioId }: Props) {
         <p className="text-sm text-muted-foreground">
           {filtradas.length} de {filas.length}
         </p>
+        <Button
+          type="button"
+          className="button-ios sm:ml-auto"
+          onClick={() => setCrearProveedor(true)}
+        >
+          <Plus className="size-4" />
+          Crear cuenta de proveedor
+        </Button>
       </div>
 
       <div className="overflow-hidden rounded-2xl border bg-card shadow-sm">
@@ -164,7 +178,7 @@ export function PanelUsuarios({ usuarios, actualUsuarioId }: Props) {
                       </div>
                     </TableCell>
                     <TableCell className="font-mono text-xs">
-                      {u.matricula_imss}
+                      {u.matricula_imss ?? "—"}
                     </TableCell>
                     <TableCell className="text-sm">{u.email}</TableCell>
                     <TableCell>
@@ -202,6 +216,12 @@ export function PanelUsuarios({ usuarios, actualUsuarioId }: Props) {
           </TableBody>
         </Table>
       </div>
+
+      <DialogCrearProveedor
+        open={crearProveedor}
+        onOpenChange={setCrearProveedor}
+        onCreated={() => router.refresh()}
+      />
     </div>
   )
 }

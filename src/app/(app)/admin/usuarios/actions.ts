@@ -8,7 +8,7 @@ import type { Profile, UserRole } from "@/types/database"
 
 export type AdminActionResult = { ok?: boolean; error?: string }
 
-const ROLES_VALIDOS: UserRole[] = ["admin", "medico", "enfermera"]
+const ROLES_VALIDOS: UserRole[] = ["admin", "medico", "enfermera", "proveedor"]
 
 async function verificarAdmin(): Promise<
   | { error: string; uid?: undefined }
@@ -73,4 +73,75 @@ export async function toggleActivoUsuarioAction(
 
   revalidatePath("/admin/usuarios")
   return { ok: true }
+}
+
+export interface CrearProveedorInput {
+  nombre_completo: string
+  email: string
+  identificador?: string | null
+  password: string
+}
+
+export type CrearProveedorResult = AdminActionResult & {
+  email?: string
+  password?: string
+}
+
+function mapearErrorCreacion(mensaje: string): string {
+  const m = mensaje.toLowerCase()
+  if (m.includes("already registered") || m.includes("user already")) {
+    return "Ese email ya está registrado"
+  }
+  if (m.includes("password")) {
+    return "La contraseña no cumple los requisitos del proveedor de auth"
+  }
+  return mensaje
+}
+
+export async function crearCuentaProveedorAction(
+  input: CrearProveedorInput
+): Promise<CrearProveedorResult> {
+  const auth = await verificarAdmin()
+  if (auth.error) return { error: auth.error }
+
+  const nombre = input.nombre_completo?.trim() ?? ""
+  const email = input.email?.trim().toLowerCase() ?? ""
+  const password = input.password ?? ""
+  const identificador = input.identificador?.trim() || null
+
+  if (nombre.length < 3) {
+    return { error: "El nombre debe tener al menos 3 caracteres" }
+  }
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    return { error: "Email inválido" }
+  }
+  if (password.length < 8) {
+    return { error: "La contraseña debe tener al menos 8 caracteres" }
+  }
+
+  const supabaseAdmin = createAdminClient()
+  const { data, error } = await supabaseAdmin.auth.admin.createUser({
+    email,
+    password,
+    email_confirm: true,
+    user_metadata: {
+      nombre_completo: nombre,
+      matricula_imss: identificador,
+      role: "proveedor",
+    },
+  })
+  if (error || !data.user) {
+    return { error: mapearErrorCreacion(error?.message ?? "No se pudo crear el usuario") }
+  }
+
+  // El trigger handle_new_user crea el profile con role='proveedor'.
+  // Defensa por si llegó con role distinto (p. ej. trigger desactualizado).
+  const { error: errUpd } = await supabaseAdmin
+    .from("profiles")
+    .update({ role: "proveedor" })
+    .eq("id", data.user.id)
+  if (errUpd) return { error: errUpd.message }
+
+  revalidatePath("/admin/usuarios")
+  return { ok: true, email, password }
 }
