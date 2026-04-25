@@ -7,8 +7,6 @@ import { MiniHeader } from "../components/MiniHeader"
 import { Tabla } from "../components/Tabla"
 import { formatearFecha, formatearHora, type DatosCirugia } from "../datos"
 
-const FILAS_MIN = 25
-
 // Estilos compactos para la cabecera de esta hoja: dejamos máxima
 // superficie útil para la tabla de materiales.
 const c = StyleSheet.create({
@@ -167,7 +165,6 @@ export function SolicitudMaterialPDF({ datos }: { datos: DatosCirugia }) {
             { key: "cantidad", titulo: "Cant.", width: 44, align: "center" },
           ]}
           filas={filasMateriales}
-          filasMinimas={FILAS_MIN}
         />
 
         <Footer formato="Solicitud de material" cirugiaId={datos.cirugia.id} />
