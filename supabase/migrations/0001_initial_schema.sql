@@ -4,7 +4,6 @@
 -- ============================================================
 
 -- Extensiones
-CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 CREATE EXTENSION IF NOT EXISTS "pg_trgm"; -- para búsqueda fuzzy en catálogo
 
 -- ============================================================
@@ -60,7 +59,7 @@ CREATE INDEX idx_catalogo_activo ON public.catalogo_material(activo);
 -- PACIENTES
 -- ============================================================
 CREATE TABLE public.pacientes (
-  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   num_afiliacion_imss TEXT NOT NULL,
   agregado TEXT,
   nombre_completo TEXT NOT NULL,
@@ -81,7 +80,7 @@ CREATE INDEX idx_pacientes_nombre_trgm ON public.pacientes USING gin (nombre_com
 -- CIRUGÍAS
 -- ============================================================
 CREATE TABLE public.cirugias (
-  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   paciente_id UUID NOT NULL REFERENCES public.pacientes(id) ON DELETE RESTRICT,
   medico_id UUID NOT NULL REFERENCES public.profiles(id) ON DELETE RESTRICT,
 
@@ -114,7 +113,7 @@ CREATE INDEX idx_cirugias_estado ON public.cirugias(estado);
 -- MATERIALES POR CIRUGÍA
 -- ============================================================
 CREATE TABLE public.cirugia_materiales (
-  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   cirugia_id UUID NOT NULL REFERENCES public.cirugias(id) ON DELETE CASCADE,
 
   -- Solo uno de estos dos tendrá valor
