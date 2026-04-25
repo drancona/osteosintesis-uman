@@ -1,4 +1,6 @@
 import { createElement, type ReactElement } from "react"
+import path from "node:path"
+import { existsSync } from "node:fs"
 import { NextResponse } from "next/server"
 import { renderToBuffer, type DocumentProps } from "@react-pdf/renderer"
 
@@ -55,9 +57,15 @@ export async function GET(
     return NextResponse.json({ error: "Cirugía no encontrada" }, { status: 404 })
   }
 
+  const logoPath = path.join(process.cwd(), "public", "logo_imss.png")
+  const datosConLogo = {
+    ...datos,
+    logoPath: existsSync(logoPath) ? logoPath : null,
+  }
+
   const Template = TIPOS[tipo]
   // El componente envuelve un <Document>, pero TS sólo ve el wrapper. Cast seguro.
-  const elemento = createElement(Template, { datos }) as unknown as ReactElement<DocumentProps>
+  const elemento = createElement(Template, { datos: datosConLogo }) as unknown as ReactElement<DocumentProps>
   const buffer = await renderToBuffer(elemento)
 
   return new NextResponse(buffer as unknown as BodyInit, {

@@ -1,4 +1,4 @@
-import { View, Text } from "@react-pdf/renderer"
+import { View, Text, Image } from "@react-pdf/renderer"
 
 import { styles } from "../styles"
 
@@ -8,6 +8,8 @@ interface Props {
   hospital: { nombre: string; ooad: string }
   /** Línea superior del bloque institucional. */
   encabezadoInstitucional?: string
+  /** Path absoluto al logo (server-side). Si no llega, se usa fallback textual. */
+  logoPath?: string | null
 }
 
 export function Header({
@@ -15,11 +17,16 @@ export function Header({
   subtitulo,
   hospital,
   encabezadoInstitucional = "INSTITUTO MEXICANO DEL SEGURO SOCIAL",
+  logoPath,
 }: Props) {
   return (
     <View style={styles.headerWrap}>
       <View style={styles.headerLeft}>
-        <Text style={styles.imssBadge}>IMSS</Text>
+        {logoPath ? (
+          <Image src={logoPath} style={{ width: 44, height: 44 }} />
+        ) : (
+          <Text style={styles.imssBadge}>IMSS</Text>
+        )}
       </View>
       <View style={styles.headerCenter}>
         <Text style={styles.headerInst}>{encabezadoInstitucional}</Text>

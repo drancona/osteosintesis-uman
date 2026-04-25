@@ -3,6 +3,7 @@ import { Document, Page, View, Text } from "@react-pdf/renderer"
 import { styles } from "../styles"
 import { Header } from "../components/Header"
 import { Footer } from "../components/Footer"
+import { MiniHeader } from "../components/MiniHeader"
 import { Field } from "../components/Field"
 import { Checkbox } from "../components/Checkbox"
 import { formatearFecha, formatearHora, type DatosCirugia } from "../datos"
@@ -19,6 +20,13 @@ export function HojaQxPDF({ datos }: { datos: DatosCirugia }) {
           encabezadoInstitucional="INSTITUTO MEXICANO DEL SEGURO SOCIAL · DIRECCIÓN DE PRESTACIONES MÉDICAS"
           hospital={datos.hospital}
           titulo="SOLICITUD Y REGISTRO DE INTERVENCIÓN QUIRÚRGICA"
+          logoPath={datos.logoPath}
+        />
+
+        <MiniHeader
+          pacienteNombre={datos.paciente.nombre_completo}
+          nss={datos.paciente.num_afiliacion_imss}
+          procedimiento={datos.cirugia.procedimiento_propuesto}
         />
 
         {/* Encabezado de paciente y servicio */}

@@ -25,6 +25,8 @@ export interface DatosCirugia {
     lugar: string
     servicio: string
   }
+  /** Path absoluto al logo del IMSS (lo resuelve el route handler). */
+  logoPath?: string | null
 }
 
 export function resolverMateriales(
