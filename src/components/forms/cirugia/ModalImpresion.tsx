@@ -20,7 +20,7 @@ interface Props {
 }
 
 const TIPOS = [
-  { tipo: "hoja-qx", label: "Hoja de cirugías", icono: FileText },
+  { tipo: "hoja-qx", label: "Hoja Quirúrgica", icono: FileText },
   { tipo: "consentimiento", label: "Consentimiento Informado", icono: ClipboardSignature },
   { tipo: "solicitud-material", label: "Solicitud de Material de Osteosíntesis", icono: Package },
   { tipo: "internamiento", label: "Solicitud de Internamiento", icono: BedDouble },
@@ -51,12 +51,12 @@ export function ModalImpresion({ open, cirugiaId, onClose }: Props) {
               key={tipo}
               type="button"
               variant="outline"
-              className="h-20 justify-start gap-3"
+              className="h-24 items-center justify-start gap-3 whitespace-normal py-3 text-left"
               onClick={() => abrirPDF(tipo)}
               disabled={!cirugiaId}
             >
-              <Icono className="size-5" />
-              <span className="text-left text-sm font-medium">{label}</span>
+              <Icono className="size-5 shrink-0" />
+              <span className="text-sm font-medium leading-tight">{label}</span>
             </Button>
           ))}
         </div>
