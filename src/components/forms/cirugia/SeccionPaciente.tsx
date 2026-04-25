@@ -82,9 +82,17 @@ export function SeccionPaciente() {
               <FormLabel>NSS</FormLabel>
               <FormControl>
                 <Input
-                  placeholder="Número de afiliación"
+                  placeholder="10 dígitos"
                   inputMode="numeric"
-                  {...field}
+                  maxLength={10}
+                  pattern="[0-9]{10}"
+                  value={field.value ?? ""}
+                  onChange={(e) =>
+                    field.onChange(e.target.value.replace(/\D/g, "").slice(0, 10))
+                  }
+                  onBlur={field.onBlur}
+                  name={field.name}
+                  ref={field.ref}
                 />
               </FormControl>
               <FormMessage />

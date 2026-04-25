@@ -14,7 +14,7 @@ export const pacienteSchema = z
     num_afiliacion_imss: z
       .string()
       .trim()
-      .min(10, "Mínimo 10 caracteres"),
+      .regex(/^\d{10}$/, "El NSS debe tener exactamente 10 dígitos numéricos"),
     agregado: textoOpcional,
     nombre_completo: z.string().trim().min(3, "Mínimo 3 caracteres"),
     edad: z

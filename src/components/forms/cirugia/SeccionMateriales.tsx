@@ -35,17 +35,11 @@ export function SeccionMateriales({ catalogo }: Props) {
 
   return (
     <section className="space-y-6">
-      <header className="flex items-end justify-between gap-4">
-        <div>
-          <h2 className="text-lg font-semibold">Material de osteosíntesis</h2>
-          <p className="text-sm text-muted-foreground">
-            Selecciona del catálogo o agrega como personalizado.
-          </p>
-        </div>
-        <Button type="button" variant="outline" size="sm" onClick={appendVacio}>
-          <Plus className="size-4" />
-          Agregar material
-        </Button>
+      <header>
+        <h2 className="text-lg font-semibold">Material de osteosíntesis</h2>
+        <p className="text-sm text-muted-foreground">
+          Selecciona del catálogo o agrega como personalizado.
+        </p>
       </header>
 
       <div className="space-y-3">
@@ -147,6 +141,16 @@ export function SeccionMateriales({ catalogo }: Props) {
         {typeof errorRoot === "string" && (
           <p className="text-sm text-destructive">{errorRoot}</p>
         )}
+
+        <Button
+          type="button"
+          variant="outline"
+          onClick={appendVacio}
+          className="w-full sm:w-auto"
+        >
+          <Plus className="size-4" />
+          Agregar material
+        </Button>
       </div>
     </section>
   )
