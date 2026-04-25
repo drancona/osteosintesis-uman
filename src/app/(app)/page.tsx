@@ -1,6 +1,12 @@
 import Link from "next/link"
 import { redirect } from "next/navigation"
-import { CalendarDays, ListChecks, Plus } from "lucide-react"
+import {
+  BookOpen,
+  CalendarDays,
+  ListChecks,
+  Plus,
+  Users,
+} from "lucide-react"
 
 import { createClient } from "@/lib/supabase/server"
 import { getTituloUsuario } from "@/lib/utils"
@@ -117,6 +123,23 @@ export default async function DashboardPage() {
           descripcion="Vista por día, semana y mes"
         />
       </section>
+
+      {profile.role === "admin" && (
+        <section className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2">
+          <Acceso
+            href="/admin/usuarios"
+            Icono={Users}
+            titulo="Administrar usuarios"
+            descripcion="Roles y altas/bajas del personal"
+          />
+          <Acceso
+            href="/admin/catalogo"
+            Icono={BookOpen}
+            titulo="Administrar catálogo"
+            descripcion="Material de osteosíntesis"
+          />
+        </section>
+      )}
     </main>
   )
 }
